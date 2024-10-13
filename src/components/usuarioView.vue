@@ -28,8 +28,8 @@
   
   <script>
   // Importamos Firestore desde la configuración de Firebase
-  import { db } from '../firebase';
-  import { collection, addDoc } from 'firebase/firestore';
+  import { auth } from '../firebase';
+  import{ signInWithEmailAndPassword,} from 'firebase/auth'
   
   export default {
 
@@ -44,10 +44,12 @@
       async login() {
         
         try {
-          await addDoc(collection(db, "usuarios"), {
-            email: this.email,
-            password: this.password,
-          });
+
+          await signInWithEmailAndPassword(auth,this.email,this.password)
+
+          
+
+          
           alert("Inicio de sesion correcto");
           console.log("Inicio de sesión registrado en Firestore.");
         } catch (error) {

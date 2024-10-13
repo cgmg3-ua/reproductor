@@ -1,9 +1,9 @@
 <template>
     <div>
+    </div>
+    <div>
       <h2>Títulos de las Canciones</h2>
-        <li v-for="(cancion, index) in canciones" :key="index">
-          {{ cancion.title }}
-        </li>
+        {{ canciones }}
     </div>
   </template>
   
@@ -32,7 +32,7 @@
           
             const cancionData = querySnapshot.docs[i].data();
             
-            cancionesArray.push({ title: cancionData.title });
+            cancionesArray.push( cancionData.title );
           } 
           this.canciones = cancionesArray;
         } catch (error) {
