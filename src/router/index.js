@@ -6,6 +6,7 @@ import ForgotPasswordView from '../components/forgotPasswordView.vue';
 import formularioView from '../components/formularioView.vue';
 import playerView from '../components/playerView.vue';
 import musicaView from '../components/musicaView.vue';
+import radioView from '@/components/radioView.vue';
 
 
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
     path: '/forgot-password',
     name: 'ForgotPasswordView',
     component: ForgotPasswordView
+  },
+  {
+    path: '/radio',
+    name: 'radioView',
+    component: radioView
   },
   {
     path: '/musica',

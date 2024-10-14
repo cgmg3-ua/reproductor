@@ -5,6 +5,7 @@
       <router-link to="/">home</router-link>
       <router-link to="/usuario">usuario</router-link>
       <router-link to="/musica">musica</router-link>
+      <router-link to="/radio">radio</router-link>
     </nav>
   </header>
   <RouterView></RouterView>

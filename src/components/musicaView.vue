@@ -1,8 +1,15 @@
 <template>
     <div>
+      <h1>Busqueda </h1>
+      <form @submit.prevent="buscar">
+      <input type="search" v-model="busqueda">
+      <button type="submit">buscar</button>
+      </form>
+      
     </div>
+    <h2>{{mensaje}}</h2>
     <div>
-      <h2>Títulos de las Canciones</h2>
+      <h2>Canciones</h2>
         {{ canciones }}
     </div>
   </template>
@@ -14,7 +21,9 @@
   export default {
     data() {
       return {
-        canciones: []  // Aquí almacenaremos los títulos de las canciones obtenidas
+        canciones: [],  // Aquí almacenaremos los títulos de las canciones obtenidas
+        busqueda: "",
+        mensaje: ""
       };
     },
     methods: {
@@ -38,6 +47,24 @@
         } catch (error) {
           console.error('Error obteniendo las canciones:', error);
         }
+        
+      },
+      buscar(){
+        let numero=false;
+        for(let i=0;this.canciones.length>i;i++){
+          if(this.canciones[i]==this.busqueda){
+            numero=i;
+            break;
+          }
+          
+        
+        }
+        if(numero==false)
+          this.mensaje="No existe esa cancion";
+        
+        else
+          this.mensaje="Existe la canicon " + this.canciones[numero];
+
       }
     },
     mounted() {
