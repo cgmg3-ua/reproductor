@@ -3,11 +3,12 @@
 El objetivo del proyecto es desarrollar un reproductor web de música que permita a los usuarios escuchar música de manera gratuita, sin necesidad de iniciar sesión. Sin embargo, para acceder a ciertas funciones, como la escucha de estaciones de radio y la subida de música como artista, los usuarios deberán registrarse e iniciar sesión.
 
 2. Requerimientos Funcionales
-2.1 Autenticación de Usuarios
-Registro de Usuarios: Los usuarios podrán registrarse como artistas utilizando su correo electrónico y una contraseña.
-Inicio de Sesión: Los usuarios podrán iniciar sesión con su correo electrónico y contraseña.
-Logout: Los usuarios tendrán la opción de cerrar sesión en cualquier momento.
-Recuperación de Contraseña: Se implementará un mecanismo de “Olvidé mi contraseña” que permitirá a los usuarios restablecer su contraseña mediante el envío de un correo electrónico a través de Firebase.
+   
+  2.1 Autenticación de Usuarios
+  Registro de Usuarios: Los usuarios podrán registrarse como artistas utilizando su correo electrónico y una contraseña.
+  Inicio de Sesión: Los usuarios podrán iniciar sesión con su correo electrónico y contraseña.
+  Logout: Los usuarios tendrán la opción de cerrar sesión en cualquier momento.
+  Recuperación de Contraseña: Se implementará un mecanismo de “Olvidé mi contraseña” que permitirá a los usuarios restablecer su contraseña mediante el envío de un correo electrónico a través de Firebase.
 2.2 Gestión de Usuarios
 Edición de Perfil: Los usuarios podrán editar su perfil, incluyendo su nombre, dirección de correo electrónico y foto de perfil.
 Baja de Usuario: Los usuarios tendrán la opción de eliminar su cuenta de la plataforma en cualquier momento.
