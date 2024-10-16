@@ -1,4 +1,4 @@
-# reproductor
+# Reproductor
 1. Descripción General
 El objetivo del proyecto es desarrollar un reproductor web de música que permita a los usuarios escuchar música de manera gratuita, sin necesidad de iniciar sesión. Sin embargo, para acceder a ciertas funciones, como la escucha de estaciones de radio y la subida de música como artista, los usuarios deberán registrarse e iniciar sesión.
 
