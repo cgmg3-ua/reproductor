@@ -24,6 +24,9 @@ Detalles de Canción: Al hacer clic en una canción del listado, se mostrarán t
 Edición de Canciones: Los artistas podrán editar la información de las canciones que hayan subido, como el título, artista, y otros detalles.
 Eliminación de Canciones: Los artistas tendrán la opción de eliminar las canciones que hayan subido si así lo desean.
 
+
+
+
 ## Project setup
 ```
 npm install
