@@ -1,9 +1,9 @@
 # Reproductor
 
 Descripción General
-El objetivo del proyecto es desarrollar un reproductor web de música que permita a los usuarios escuchar música de manera gratuita, sin necesidad de iniciar sesión. Sin embargo, para acceder a ciertas funciones, como la escucha de estaciones de radio y la subida de música como artista, los usuarios deberán registrarse e iniciar sesión.
+El objetivo del proyecto es desarrollar un reproductor web de música que permita a los usuarios escuchar música, sin necesidad de iniciar sesión. Sin embargo, para acceder a ciertas funciones, como la escucha de estaciones de radio y la subida de música como artista, los usuarios deberán registrarse e iniciar sesión.
 
-Parte 1: Requerimientos iniciales
+# Parte 1: Requerimientos iniciales
 
    
    1.1 Autenticación de Usuarios
@@ -32,8 +32,27 @@ Parte 1: Requerimientos iniciales
    Edición de Canciones: Los artistas podrán editar la información de las canciones que hayan subido, como el título, artista, y otros detalles.
    Eliminación de Canciones: Los artistas tendrán la opción de eliminar las canciones que hayan subido si así lo desean.
 
+   # Parte 2: Modelo de datos
+   Este será el esquema de mi base de datos en firestore aunque sea una base noSQL es pra representarlo de alguna manera
 
+![alt text](image.png)
 
+# Parte 3: Prototipado simple del sitio web
+
+   En la carpeta de moqups hay distintos html con una idea de como quedaria el proyecto final
+
+# Parte 4: Desarrollo del backend
+
+   He comenzado usando el framewok vue directamnete. 
+   El Inicio de sesion esta en usuarioView.vue .
+   El Registro en registroView.vue. 
+   El formulario para añdir musica en formularioView.vue . 
+   Para ver la lista de  musica almacenada en firestore musicaView.vue (aparte añade un buscador)
+   Para contraseña perdida forgotPasswordView.vue . 
+
+   Por ahora he probado en guardar las canciones en Storage de firebase para poder despues reproducirlo por ahora lo reproduce en playerView.vue pero quiero cambiar alguna cosa.
+
+   Tambien he añadido un api para reproducir radios la he configurado para que sean radios españolas esta en radioView.vue.
 
 ## Project setup
 ```
