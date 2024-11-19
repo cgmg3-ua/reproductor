@@ -39,7 +39,7 @@ El objetivo del proyecto es desarrollar un reproductor web de música que permit
 
 # Parte 3: Prototipado simple del sitio web
 
-   En la carpeta de moqups hay distintos html con una idea de como quedaria el proyecto final
+   En la carpeta de moqups hay distintos html con una idea de como quedaria el proyecto final aunq el proyecto tiene html con lo basico para que funcione pero no sera el diseño final
 
 # Parte 4: Desarrollo del backend
 

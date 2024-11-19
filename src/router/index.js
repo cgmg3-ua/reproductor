@@ -7,6 +7,8 @@ import formularioView from '../components/formularioView.vue';
 import playerView from '../components/playerView.vue';
 import musicaView from '../components/musicaView.vue';
 import radioView from '@/components/radioView.vue';
+import perfilView from '../components/perfilView.vue';
+import { auth } from '../firebase';
 
 
 const routes = [
@@ -26,9 +28,23 @@ const routes = [
     component:playerView
   },
   {
+    path:'/perfil',
+    name:'perfilView',
+    component: perfilView
+  },
+  {
     path: '/usuario',
     name: 'UsuarioView',
-    component: UsuarioView
+    component: UsuarioView,
+    beforeEnter: (to, from, next) => {
+      // Si el usuario ya está autenticado, redirigir a la página de inicio (o cualquier otra)
+      const user = auth.currentUser;
+      if (user) {
+        next('/home'); // Redirige al home si ya está autenticado
+      } else {
+        next(); // Permite el acceso si no está autenticado
+      }
+    },
   },
   {
     path: '/register',

@@ -45,14 +45,27 @@ export default {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
         // Añadir el nuevo usuario a la colección "usuarios"
-        const user = userCredential.user;
-        this.mensaje = `Usuario registrado: ${user.email}`;
+        
         await addDoc(collection(db, "usuarios"), {
           email: this.email,
           artista: this.artista
         });
-        alert("Usuario registrado");
+        //token para registrar
+        
+        const user = userCredential.user;
+
+
+        const token = await user.getIdToken();
+        console.log("Token generado:", token);
+
+        // Guardar el token en localStorage (opcional)
+        localStorage.setItem("authToken", token);
+        
+
+
+        alert("registrado");
         console.log("Usuario registrado en Firestore.");
+        this.$router.push("/usuario");
         
       } catch (error) {
         console.error("Error al registrar el usuario:", error);

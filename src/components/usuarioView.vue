@@ -1,5 +1,5 @@
 <template>
-    <div class="login-container">
+    <div class="login-container" v-if="!isAuthenticated">
       <h1>Iniciar Sesión</h1>
   
       <form @submit.prevent="login">
@@ -45,16 +45,26 @@
         
         try {
 
-          await signInWithEmailAndPassword(auth,this.email,this.password)
+          const userCredential=await signInWithEmailAndPassword(auth,this.email,this.password)
+          
 
+          const user = userCredential.user;
+
+
+          const token = await user.getIdToken();
+          console.log("Token generado:", token);
+
+          // Guardar el token en localStorage (opcional)
+          localStorage.setItem("authToken", token);
           
 
           
-          alert("Inicio de sesion correcto");
+          
           console.log("Inicio de sesión registrado en Firestore.");
+          this.$router.push("/player");
         } catch (error) {
           console.error("Error al registrar el inicio de sesión:", error);
-          alert("Error al inicar sesion",error)
+          alert("Error al inicar sesion ",error)
         }
       }
     }
