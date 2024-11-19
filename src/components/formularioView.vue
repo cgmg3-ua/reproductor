@@ -24,13 +24,14 @@
   import { getFirestore, collection, addDoc } from 'firebase/firestore'; // Firestore
   import { storage } from "../firebase"; // Cpara guardar las pistas de audio
   import { getDownloadURL, uploadBytes } from 'firebase/storage';
-  
+  import { jwtDecode } from 'jwt-decode';
   export default {
     data() {
       return {
         songFile: null,
         songTitle: "",
         uploadStatus: "",
+        userEmail: "", // Aquí almacenaremos el correo del usuario
       };
     },
     methods: {
@@ -42,7 +43,25 @@
           this.uploadStatus = "Por favor, selecciona un archivo y añade un título.";
           return;
         }
+        const token = localStorage.getItem('authToken');
   
+        // Si el token existe, decodificarlo
+        if (token) {
+          try {
+            // Decodificar el token para obtener el payload
+            const decodedToken = jwtDecode(token);
+
+            // Extraer el correo del payload decodificado
+            this.userEmail = decodedToken.email;
+          } catch (error) {
+            console.error('Error al decodificar el token:', error);
+            alert("ERROR DECODIFICAR TOKEN");
+          }
+        }
+        else {
+          alert("No estás autenticado.");
+          return;
+        }
         // 1. Subir archivo a GCS
         const storageRef = ref(storage, `songs/${this.songFile.name}`);
         try {
@@ -57,6 +76,7 @@
           await addDoc(collection(db, "songs"), {
             title: this.songTitle,
             url: downloadURL,
+            usuario: this.userEmail,
           });
   
           // 3. Notificar al usuario que se completó la subida

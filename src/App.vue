@@ -1,19 +1,49 @@
 <template>
   
-  <header>
-    <nav>
-      <router-link to="/">home</router-link>
-      <router-link  v-if="!isAuthenticated" to="/usuario">usuario</router-link>
-      <router-link to="/musica">musica</router-link>
-      <router-link to="/radio">radio</router-link>
-      <!-- Mostrar el botón de cerrar sesión solo si está autenticado -->
-      <button v-if="isAuthenticated" @click="logout">Cerrar Sesión</button>
-    </nav>
-  </header>
+  <header style="margin-top: 0;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <router-link class="nav-link" to="/">Home</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/musica">Música</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/radio">Radio</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link"  v-if="isAuthenticated" to="/perfil">Perfil</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link"  v-if="isAuthenticated  && isArtist"  to="/formulario">Artista zone</router-link>
+        </li>
+      </ul>  
+      <ul class="navbar-nav ml-auto">
+       
+        <li class="nav-item">
+          <router-link class="nav-link" v-if="!isAuthenticated" to="/usuario">Iniciar Sesión</router-link>
+        </li>
+        
+      </ul>
+      <button class="btn btn-outline-danger my-2 my-sm-0" v-if="isAuthenticated" @click="logout">Cerrar Sesión</button>
+    </div>
+  </nav>
+</header>
+
   <RouterView></RouterView>
+<footer class="footer">
+  <audio id="audioPlayer" controls v-if="selectedSong">
+        <source :src="selectedSong" type="audio/mp3" />
+        Tu navegador no soporta la etiqueta de audio.
+      </audio>
+</footer>
 </template>
 
 <script>
+  import { jwtDecode } from 'jwt-decode';
   import { onAuthStateChanged, signOut} from "firebase/auth";
   import { auth } from "./firebase.js"; 
 export default {
@@ -22,6 +52,7 @@ export default {
   data() {
     return {
       isAuthenticated: false, // Variable para controlar la autenticación
+      isArtist: false,
     };
   },
   methods: {
@@ -48,6 +79,17 @@ export default {
         this.isAuthenticated = false; // Usuario no autenticado
       }
     });
+    const token = localStorage.getItem('authToken');
+    if (token){
+      try{
+      const decodedToken = jwtDecode(token);
+      this.isArtist=decodedToken.artista;
+      }
+      catch (error) {
+        console.error('Error al decodificar el token:', error);
+        alert("ERROR DECODIFICAR TOKEN");
+      }
+    }   
   },
 };
 </script>
@@ -59,6 +101,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  
 }
 </style>
