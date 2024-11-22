@@ -34,11 +34,12 @@
 </header>
 
   <RouterView></RouterView>
-<footer class="footer">
-  <audio id="audioPlayer" controls v-if="selectedSong">
-        <source :src="selectedSong" type="audio/mp3" />
-        Tu navegador no soporta la etiqueta de audio.
-      </audio>
+  <footer class="footer">
+    <label>{{ getSelectedSong }}</label>
+    <audio ref="audioPlayer" controls v-if="getSelectedSong">
+      <source :src="getSelectedSong" type="audio/mp3" />
+      Tu navegador no soporta la etiqueta de audio.
+    </audio>
 </footer>
 </template>
 
@@ -46,14 +47,30 @@
   import { jwtDecode } from 'jwt-decode';
   import { onAuthStateChanged, signOut} from "firebase/auth";
   import { auth } from "./firebase.js"; 
+  import { mapGetters } from 'vuex';
+  
 export default {
   
   name: "App",
   data() {
     return {
       isAuthenticated: false, // Variable para controlar la autenticación
-      isArtist: false,
+      isArtist: false, // Variable para controlar si el usuario es artista
+      //selectedSong:"", // Variable para almacenar la canción seleccionada
     };
+  },
+  computed: {
+    ...mapGetters(['getSelectedSong']), // Mapear el getter al componente
+  },
+  watch: {
+    // Escucha cambios en getSelectedSong
+    getSelectedSong(newValue) {
+      if (newValue && this.$refs.audioPlayer) {
+        const audioPlayer = this.$refs.audioPlayer;
+        audioPlayer.load(); // Recargar el reproductor
+        audioPlayer.play(); // Reproducir automáticamente
+      }
+    },
   },
   methods: {
     // Método para cerrar sesión
@@ -69,6 +86,13 @@ export default {
         alert("Hubo un problema al cerrar sesión: " + error.message);
       }
     },
+
+    
+    loadSong() {
+        const audioPlayer = document.getElementById("audioPlayer");
+        audioPlayer.load();
+        audioPlayer.play();
+      },
   },
   mounted() {
     // Escuchar cambios en el estado de autenticación
@@ -102,5 +126,61 @@ export default {
   text-align: center;
   color: #2c3e50;
   
+}
+
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  background-color: #282828;
+  color: white;
+  padding: 1px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Añade esto a tu archivo de estilos global o en el bloque <style> de App.vue */
+.spotify-footer {
+  background-color: #282828;
+  color: white;
+ 
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spotify-player {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+.spotify-player audio {
+  width: 100%;
+}
+
+.spotify-player audio::-webkit-media-controls-panel {
+  background-color: #282828;
+  color: white;
+}
+
+.spotify-player audio::-webkit-media-controls-play-button,
+.spotify-player audio::-webkit-media-controls-current-time-display,
+.spotify-player audio::-webkit-media-controls-time-remaining-display,
+.spotify-player audio::-webkit-media-controls-timeline,
+.spotify-player audio::-webkit-media-controls-volume-slider,
+.spotify-player audio::-webkit-media-controls-mute-button,
+.spotify-player audio::-webkit-media-controls-fullscreen-button {
+  filter: invert(100%);
 }
 </style>
