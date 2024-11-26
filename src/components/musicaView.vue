@@ -1,79 +1,80 @@
 <template>
-    <div>
-      <h1>Busqueda </h1>
-      <form @submit.prevent="buscar">
-      <input type="search" v-model="busqueda">
+  <div>
+    <h1>Busqueda</h1>
+    <form @submit.prevent="buscar">
+      <input type="search" v-model="state.busqueda" />
       <button type="submit">buscar</button>
-      </form>
-      
-    </div>
-    <h2>{{mensaje}}</h2>
+    </form>
+
+    <h2>{{ state.mensaje }}</h2>
+
     <div>
       <h2>Canciones</h2>
-        {{ canciones }}
-    </div>
-  </template>
-  
-  <script>
-  import { collection, getDocs } from 'firebase/firestore';
-  import { db } from '../firebase';  // Asegúrate de importar tu configuración de Firebase
-  
-  export default {
-    data() {
-      return {
-        canciones: [],  // Aquí almacenaremos los títulos de las canciones obtenidas
-        busqueda: "",
-        mensaje: ""
-      };
-    },
-    methods: {
-      async obtenerTodasLasCanciones() {
-        try {
-          // Referencia a la colección "songs" en Firestore
-          const songsCollectionRef = collection(db, 'songs');
-  
-          // Obtener todas las canciones de la colección
-          const querySnapshot = await getDocs(songsCollectionRef);
-          
-          // Guardar solo los títulos en el estado
-          const cancionesArray = [];
-          for(let i=0;querySnapshot.docs.length>i;i++){
-          
-            const cancionData = querySnapshot.docs[i].data();
-            
-            cancionesArray.push( cancionData.title );
-          } 
-          this.canciones = cancionesArray;
-        } catch (error) {
-          console.error('Error obteniendo las canciones:', error);
-        }
-        
-      },
-      buscar(){
-        let numero=false;
-        for(let i=0;this.canciones.length>i;i++){
-          if(this.canciones[i]==this.busqueda){
-            numero=i;
-            break;
-          }
-          
-        
-        }
-        if(numero==false)
-          this.mensaje="No existe esa cancion";
-        
-        else
-          this.mensaje="Existe la canicon " + this.canciones[numero];
+      <!-- Lista de canciones -->
+      <ul>
+        <li v-for="(cancion, index) in state.canciones" :key="index">
+          <!-- Nombre de la canción -->
+          <span @click="mostrarInformacion(index)" style="cursor: pointer; color: blue;">
+            {{ cancion.title }}
+          </span>
+         
 
+          <!-- Desplegable con información -->
+          <div v-if="state.desplegableVisible === index" style="margin-left: 20px; border: 1px solid #ccc; padding: 10px; max-width: 300px;">
+            <p><strong>Título:</strong> {{ cancion.title }}</p>         
+            <p v-if="cancion.usuario"><strong>Artista:</strong> {{ cancion.usuario }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script>
+import { reactive, onMounted } from "vue";
+import { useCanciones } from "../store/canciones";
+
+export default {
+  setup() {
+    // Crear el estado reactivo
+    const state = reactive({
+      canciones: [], // Lista de canciones con información completa
+      desplegableVisible: null, // Índice del desplegable actualmente visible
+      mensaje: "",
+      busqueda: "",
+    });
+
+    // Método para cargar canciones
+    const cargarCanciones = async () => {
+      try {
+        const useCancionesData = useCanciones();
+        const todasLasCanciones = await useCancionesData.obtenerTodasLasCanciones();
+        state.canciones = todasLasCanciones;
+      } catch (error) {
+        console.error("Error al obtener las canciones:", error);
+        state.mensaje = "Hubo un error al obtener las canciones. Inténtalo de nuevo.";
       }
-    },
-    mounted() {
-      this.obtenerTodasLasCanciones();  // Llama a la función cuando el componente se monta
-    }
-  };
-  </script>
-  
-  <style scoped>
-  /* Añade tu estilo aquí si lo necesitas */
-  </style>
-  
+    };
+
+    // Método para alternar el desplegable
+    const mostrarInformacion = (index) => {
+      state.desplegableVisible = state.desplegableVisible === index ? null : index;
+    };
+    
+
+    // Cargar las canciones al montar el componente
+    onMounted(() => {
+      cargarCanciones();
+    });
+
+    return {
+      state,
+      mostrarInformacion,
+    };
+  },
+};
+</script>
+
+<style scoped>
+
+</style>

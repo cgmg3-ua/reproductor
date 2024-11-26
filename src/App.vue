@@ -18,7 +18,7 @@
           <router-link class="nav-link"  v-if="isAuthenticated" to="/perfil">Perfil</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link"  v-if=" isArtist "  to="/formulario">Artista zone{{ isArtist }}</router-link>
+          <router-link class="nav-link"  v-if=" isArtist "  to="/formulario">Artista zone</router-link>
         </li>
         
 

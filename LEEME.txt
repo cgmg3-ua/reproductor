@@ -1,0 +1,12 @@
+Autentificacion de si es artista + el uso de vuex para hacerlo tipo spotify + el uso de storage para reproducion de musica
+
+
+
+
+
+1-Crear listado de canciones en pinia
+2-Crear listado mostrar informacion
+3-Reproducir desde /musica
+4-Perfil ver mis caciones
+5-Poder cambiar nombre/eliminar canciones
+6-Ver opciones de paginacion
