@@ -12,16 +12,19 @@
           <router-link class="nav-link" to="/musica">Música</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="/radio">Radio</router-link>
+          <router-link class="nav-link" to="/radio">Radio </router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link"  v-if="isAuthenticated" to="/perfil">Perfil</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link"  v-if="isAuthenticated  && isArtist"  to="/formulario">Artista zone</router-link>
+          <router-link class="nav-link"  v-if=" isArtist "  to="/formulario">Artista zone{{ isArtist }}</router-link>
         </li>
+        
+
       </ul>  
       <ul class="navbar-nav ml-auto">
+       
        
         <li class="nav-item">
           <router-link class="nav-link" v-if="!isAuthenticated" to="/usuario">Iniciar Sesión</router-link>
@@ -44,10 +47,14 @@
 </template>
 
 <script>
-  import { jwtDecode } from 'jwt-decode';
-  import { onAuthStateChanged, signOut} from "firebase/auth";
+
+  import { onAuthStateChanged} from "firebase/auth";
+  import { collection, query, where, getDocs } from "firebase/firestore";
+  import { db } from "./firebase.js";
   import { auth } from "./firebase.js"; 
   import { mapGetters } from 'vuex';
+  import { useUserStore } from './store/store';
+ 
   
 export default {
   
@@ -57,10 +64,19 @@ export default {
       isAuthenticated: false, // Variable para controlar la autenticación
       isArtist: false, // Variable para controlar si el usuario es artista
       //selectedSong:"", // Variable para almacenar la canción seleccionada
+      nombre: "",
     };
   },
   computed: {
     ...mapGetters(['getSelectedSong']), // Mapear el getter al componente
+    userStore() {
+      return useUserStore();
+    },
+    decodedToken() {
+      return this.userStore.decodedToken; // Accede al token decodificado desde Pinia
+    },
+   
+  
   },
   watch: {
     // Escucha cambios en getSelectedSong
@@ -71,21 +87,50 @@ export default {
         audioPlayer.play(); // Reproducir automáticamente
       }
     },
+    isAuthenticated(newValue) {
+      if (newValue) {
+        this.esArtista(); // Llama a esArtista cuando el usuario se autentique
+      }
+    },
   },
   methods: {
     // Método para cerrar sesión
     async logout() {
       try {
-        await signOut(auth); // Cerrar sesión con Firebase
-        this.isAuthenticated = false; // Actualizar estado local
+        const userStore = useUserStore(); // Instancia useUserStore
+        await userStore.logout();
+        this.isAuthenticated = false;
+        this.isArtist= false;
         this.$router.push('/'); // Redirigir a la página principal
-        localStorage.removeItem("authToken");
-        alert("Has cerrado sesión correctamente.");
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
-        alert("Hubo un problema al cerrar sesión: " + error.message);
+        alert("Error al cerrar sesión: " + error.message);
       }
     },
+
+    async esArtista(){
+      
+      try {
+        const email=auth.currentUser.email;
+        const usuariosRef = collection(db, "usuarios");
+        const q = query(usuariosRef, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+      
+        if (!querySnapshot.empty) {
+          const usuario = querySnapshot.docs[0].data();
+          this.nombre= usuario.email;
+          this.isArtist= usuario.artista; // Devuelve true o false
+        } else {
+          this.isArtist= false; // No encontrado
+        }
+      } catch (error) {
+        alert("Error al verificar si es artista: " + error.message);
+        console.error("Error al verificar si es artista:", error);
+        this.isArtist= false;
+        }
+    },
+
+
 
     
     loadSong() {
@@ -93,27 +138,22 @@ export default {
         audioPlayer.load();
         audioPlayer.play();
       },
+     
+   
   },
+  
   mounted() {
     // Escuchar cambios en el estado de autenticación
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         this.isAuthenticated = true; // Usuario autenticado
+        //await this.esArtista();
       } else {
         this.isAuthenticated = false; // Usuario no autenticado
       }
     });
-    const token = localStorage.getItem('authToken');
-    if (token){
-      try{
-      const decodedToken = jwtDecode(token);
-      this.isArtist=decodedToken.artista;
-      }
-      catch (error) {
-        console.error('Error al decodificar el token:', error);
-        alert("ERROR DECODIFICAR TOKEN");
-      }
-    }   
+   
+     
   },
 };
 </script>

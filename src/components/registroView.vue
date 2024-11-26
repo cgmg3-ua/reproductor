@@ -25,9 +25,10 @@
 
 <script>
 // Importar Firestore
-import { db,auth } from '../firebase'; // Asegúrate de que la ruta es correcta
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore'; // Importar métodos para agregar documentos
+//import { db,auth } from '../firebase'; // Asegúrate de que la ruta es correcta
+//import { createUserWithEmailAndPassword } from 'firebase/auth';
+//import { collection, addDoc } from 'firebase/firestore'; // Importar métodos para agregar documentos
+import { useUserStore } from '../store/store'; // Ajusta la ruta si es necesario
 
 export default {
   data() {
@@ -35,7 +36,8 @@ export default {
       email: '',
       password: '',
       artista: 'false',
-      mensaje: ''
+      mensaje: '',
+      useUserStore: useUserStore()
     };
   },
   methods: {
@@ -43,33 +45,15 @@ export default {
 
     async register() {
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
-        // Añadir el nuevo usuario a la colección "usuarios"
-        
-        await addDoc(collection(db, "usuarios"), {
-          email: this.email,
-          artista: this.artista
-        });
-        //token para registrar
-        
-        const user = userCredential.user;
-
-
-        const token = await user.getIdToken();
-        console.log("Token generado:", token);
-
-        // Guardar el token en localStorage (opcional)
-        localStorage.setItem("authToken", token);
-        
-
+        await this.useUserStore.register(this.email, this.password,this.artista); // Usamos el store para manejar el registro
 
         alert("registrado");
         console.log("Usuario registrado en Firestore.");
-        this.$router.push("/usuario");
+        this.$router.push("/");
         
       } catch (error) {
         console.error("Error al registrar el usuario:", error);
-        alert("Hubo un error al registrar. Inténtalo de nuevo.");
+        alert("Hubo un error al registrar. Inténtalo de nuevo.",error.message);
       }
     }
   }

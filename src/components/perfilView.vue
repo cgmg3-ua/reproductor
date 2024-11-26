@@ -1,45 +1,30 @@
 <template>
-    <div>
-      <h1>Bienvenido!</h1>
-      <!-- Mostrar el correo del usuario si el token es válido -->
-      <p v-if="userEmail">Correo del usuario: {{ userEmail }}</p>
-      <p v-else>No estás autenticado.</p>
-    </div>
-  </template>
-  
-  <script>
-  // Importar la librería jwt-decode
-  import { jwtDecode } from 'jwt-decode';
+  <div>
+    <h1>Bienvenido!</h1>
+    <p v-if="decodedToken">Correo del usuario: {{ decodedToken.email }}</p>
+    <p v-else>No estás autenticado.</p>
+  </div>
+</template>
 
-  
-  export default {
-    data() {
-      return {
-        userEmail: '', // Aquí almacenaremos el correo del usuario
-      };
+<script>
+import { useUserStore } from '../store/store';
+
+export default {
+  name: 'PerfilView',
+  computed: {
+    userStore() {
+      return useUserStore();
     },
-    mounted() {
-      // Obtener el token desde localStorage
-      const token = localStorage.getItem('authToken');
-  
-      // Si el token existe, decodificarlo
-      if (token) {
-        try {
-          // Decodificar el token para obtener el payload
-          const decodedToken = jwtDecode(token);
-  
-          // Extraer el correo del payload decodificado
-          this.userEmail = decodedToken.email;
-        } catch (error) {
-          console.error('Error al decodificar el token:', error);
-          alert("ERROR DECODIFICAR TOKEN");
-        }
-      }
+    decodedToken() {
+      return this.userStore.decodedToken; // Accede al token decodificado desde Pinia
     },
-  };
-  </script>
-  
-  <style scoped>
-  /* Aquí puedes agregar estilos si es necesario */
-  </style>
-  
+  },
+  mounted() {
+    this.userStore.loadTokenFromStorage(); // Carga el token desde localStorage al cargar el componente
+  },
+};
+</script>
+
+<style scoped>
+/* Aquí puedes agregar estilos si es necesario */
+</style>
