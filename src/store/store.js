@@ -23,7 +23,7 @@ export const useUserStore = defineStore('user', {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         this.user = userCredential.user;
         this.token = await this.user.getIdToken();
-
+        
         // Persistir el token en localStorage
         localStorage.setItem('authToken', this.token);
 

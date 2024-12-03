@@ -8,7 +8,11 @@ import playerView from '../components/playerView.vue';
 import musicaView from '../components/musicaView.vue';
 import radioView from '@/components/radioView.vue';
 import perfilView from '../components/perfilView.vue';
+import misCancionesView from '../components/miscancionesView.vue';
+import editarcancionView from '../components/editarcancionView.vue';
 import { auth } from '../firebase';
+import { onAuthStateChanged } from "firebase/auth";
+
 
 
 const routes = [
@@ -20,7 +24,19 @@ const routes = [
   {
     path:'/formulario',
     name:'formularioView',
-    component:formularioView
+    component:formularioView,
+    beforeEnter: (to, from, next) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('Usuario autenticado:', user.email);
+          next(); // Usuario autenticado
+        } else {
+          console.log('Usuario no autenticado');
+          //alert('Debes iniciar sesión para acceder a esta página.');
+          next('/usuario'); // Redirigir
+        }
+      });
+    },
   },
   {
     path:'/player',
@@ -30,22 +46,47 @@ const routes = [
   {
     path:'/perfil',
     name:'perfilView',
-    component: perfilView
+    component: perfilView,
+    beforeEnter: (to, from, next) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('Usuario autenticado:', user.email);
+          next(); // Usuario autenticado
+        } else {
+          console.log('Usuario no autenticado');
+          //alert('Debes iniciar sesión para acceder a esta página.');
+          next('/usuario'); // Redirigir
+        }
+      });
+    },
   },
+  
+    {
+      path: '/miscanciones',
+      name: 'misCancionesView', // (corrige 'namne' a 'name')
+      component: misCancionesView,
+      beforeEnter: (to, from, next) => {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            console.log('Usuario autenticado:', user.email);
+            next(); // Usuario autenticado
+          } else {
+            console.log('Usuario no autenticado');
+            //alert('Debes iniciar sesión para acceder a esta página.');
+            next('/usuario'); // Redirigir
+          }
+        });
+      },
+      
+    },
+  
   {
     path: '/usuario',
     name: 'UsuarioView',
     component: UsuarioView,
-    beforeEnter: (to, from, next) => {
-      // Si el usuario ya está autenticado, redirigir a la página de inicio (o cualquier otra)
-      const user = auth.currentUser;
-      if (user) {
-        next('/home'); // Redirige al home si ya está autenticado
-      } else {
-        next(); // Permite el acceso si no está autenticado
-      }
-    },
+   
   },
+  
   {
     path: '/register',
     name: 'RegisterView',
@@ -65,6 +106,23 @@ const routes = [
     path: '/musica',
     name: 'musicaView',
     component: musicaView
+  },
+  {
+    path: '/editarcancion',
+    name: 'editarcancionView',
+    component: editarcancionView,
+    beforeEnter: (to, from, next) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('Usuario autenticado:', user.email);
+          next(); // Usuario autenticado
+        } else {
+          console.log('Usuario no autenticado');
+          //alert('Debes iniciar sesión para acceder a esta página.');
+          next('/usuario'); // Redirigir
+        }
+      });
+    },
   }
 ];
 

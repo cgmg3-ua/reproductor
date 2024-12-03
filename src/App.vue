@@ -38,7 +38,7 @@
 
   <RouterView></RouterView>
   <footer class="footer">
-    <label>{{ getSelectedSong }}</label>
+    
     <audio ref="audioPlayer" controls v-if="getSelectedSong">
       <source :src="getSelectedSong" type="audio/mp3" />
       Tu navegador no soporta la etiqueta de audio.
@@ -177,7 +177,7 @@ export default {
 footer {
   background-color: #282828;
   color: white;
-  padding: 1px;
+  
   position: fixed;
   bottom: 0;
   width: 100%;

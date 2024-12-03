@@ -14,9 +14,14 @@
   
         <button type="submit">Subir Canción</button>
       </form>
-  
+      <div>
+        <a href="/miscanciones"><button >Mis Canciones</button></a>
+      </div>
       <p v-if="uploadStatus">{{ uploadStatus }}</p>
+
+      
     </div>
+
   </template>
   
   <script>
