@@ -25,11 +25,9 @@
   </template>
   
   <script>
-  import { ref } from 'firebase/storage'; // Referencias a Storage
-  import { getFirestore, collection, addDoc } from 'firebase/firestore'; // Firestore
-  import { storage } from "../firebase"; // Cpara guardar las pistas de audio
-  import { getDownloadURL, uploadBytes } from 'firebase/storage';
-  import { jwtDecode } from 'jwt-decode';
+  
+  import { useCanciones } from "../store/canciones"; // Importa el store de Pinia
+  import {useUserStore} from "../store/store";
   export default {
     data() {
       return {
@@ -39,6 +37,14 @@
         userEmail: "", // Aquí almacenaremos el correo del usuario
       };
     },
+    computed: {
+    userStore() {
+      return useUserStore();
+    },
+    decodedToken() {
+      return this.userStore.decodedToken; // Accede al token decodificado desde Pinia
+    },
+  },
     methods: {
       onFileChange(event) {
         this.songFile = event.target.files[0]; // Almacenar el archivo seleccionado
@@ -48,49 +54,28 @@
           this.uploadStatus = "Por favor, selecciona un archivo y añade un título.";
           return;
         }
-        const token = localStorage.getItem('authToken');
+        
   
         // Si el token existe, decodificarlo
-        if (token) {
-          try {
-            // Decodificar el token para obtener el payload
-            const decodedToken = jwtDecode(token);
-
-            // Extraer el correo del payload decodificado
-            this.userEmail = decodedToken.email;
-          } catch (error) {
-            console.error('Error al decodificar el token:', error);
-            alert("ERROR DECODIFICAR TOKEN");
-          }
-        }
-        else {
-          alert("No estás autenticado.");
-          return;
-        }
-        // 1. Subir archivo a GCS
-        const storageRef = ref(storage, `songs/${this.songFile.name}`);
+      
         try {
-          // Subir el archivo a Cloud Storage
-          await uploadBytes(storageRef, this.songFile);
-  
-          // Obtener la URL de descarga
-          const downloadURL = await getDownloadURL(storageRef);
-  
-          // 2. Guardar metadatos en Firestore
-          const db = getFirestore();
-          await addDoc(collection(db, "songs"), {
-            title: this.songTitle,
-            url: downloadURL,
-            usuario: this.userEmail,
-          });
-  
-          // 3. Notificar al usuario que se completó la subida
-          this.uploadStatus = "Canción subida exitosamente.";
+          
+          const useCancionesData = useCanciones();
+          await useCancionesData.guardarCancion(this.songFile, this.songTitle, this.userEmail);
+          this.uploadStatus = "Canción subida con éxito.";
+          this.songFile = null;
+          this.songTitle = "";
+          document.getElementById("songFile").value = null;
+
         } catch (error) {
           console.error("Error subiendo la canción:", error);
           this.uploadStatus = "Hubo un error al subir la canción.";
         }
       },
+    },
+    mounted() {
+      this.userStore.loadTokenFromStorage(); // Carga el token desde localStorage al cargar el componente
+      this.userEmail = this.userStore.decodedToken.email; // Almacenar el correo del usuario
     },
   };
   </script>

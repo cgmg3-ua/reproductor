@@ -10,6 +10,11 @@ import {
   updateDoc 
 } from "firebase/firestore";
 import { db } from '../firebase'; // Asegúrate de que la ruta sea correcta
+import { ref } from 'firebase/storage'; // Referencias a Storage
+ 
+  import { storage } from "../firebase"; // Cpara guardar las pistas de audio
+  import { getDownloadURL, uploadBytes } from 'firebase/storage';
+import { addDoc } from 'firebase/firestore';
 
 
 export const useCanciones = defineStore('url',{
@@ -180,7 +185,35 @@ async eliminarCancion(songUrl) {
     } catch (error) {
       console.error("Error al obtener el ID de la canción:", error);
     }
-  }
+  },
+  async guardarCancion(songFile, songTitle, userEmail) {
+    try {
+        // Subir archivo a Cloud Storage
+        const storageRef = ref(storage, `songs/${songFile.name}`);
+        await uploadBytes(storageRef, songFile);
+
+        // Obtener la URL de descarga
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Guardar metadatos en Firestore
+        const newSong = {
+            title: songTitle,
+            url: downloadURL,
+            usuario: userEmail,
+        };
+
+        await addDoc(collection(db, "songs"), newSong);
+
+        
+
+        console.log("Canción subida exitosamente");
+        return { success: true, message: "Canción subida exitosamente" };
+    } catch (error) {
+        console.error("Error subiendo la canción:", error);
+        return { success: false, message: "Hubo un error al subir la canción" };
+    }
+    },
+
  
     
 
