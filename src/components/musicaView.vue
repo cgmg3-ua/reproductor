@@ -11,21 +11,22 @@
     <div>
       <h2>Canciones</h2>
       <!-- Lista de canciones -->
-      <ul>
+      <ul class="canciones">
         <li v-for="(cancion, index) in canciones" :key="index">
           <!-- Nombre de la canción -->
-          <span @click="mostrarInformacion(index)">
-            {{ cancion.title }}
-          </span>
           <Transition name="fade">
-            <span v-if="desplegableVisible !== index" @click="loadSong(index)">
+            <span v-if="desplegableVisible !== index" @click="loadSong(index)" class="botonplay">
               <i class="bi bi-play-fill fs-2"></i> <!-- fs-2 para ícono grande -->
             </span>
           </Transition>
+          <span class="nombrecioncion" @click="mostrarInformacion(index)">
+            {{ cancion.title }}
+          </span>
+          
           <Transition name="nested">
             <div v-if="desplegableVisible === index" class="inner" style="margin-left: 20px;">
                <!-- <p><strong>Título:</strong> {{ cancion.title }}</p>  -->       
-              <p v-if="cancion.usuario"><strong>Artista:</strong> {{ cancion.usuario }}</p>
+              <p v-if="cancion.usuario" style="color:black"><strong>Artista:</strong> {{ cancion.usuario }}</p>
             </div>
           </Transition>
 
@@ -90,12 +91,7 @@ export default {
 </script>
 
 <style scoped>
-all {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+
 .nested-enter-active,
 .nested-leave-active {
   transition: all 0.3s ease-in-out;
@@ -130,6 +126,7 @@ ul {
   max-width: 400px; /* Ancho máximo */
   margin: 20px auto; /* Centrar el listado */
   
+  
 }
 
 /* Elementos individuales de la lista */
@@ -141,15 +138,16 @@ ul li {
   border-bottom: 1px solid #ddd; /* Línea separadora */
   background-color: #fff; /* Fondo blanco para elementos */
   transition: background-color 0.3s ease; /* Efecto al pasar el mouse */
+ 
 }
 
 /* Último elemento sin borde */
-ul li:last-child {
+ul li:first-child {
   border-bottom: none;
 }
 
 /* Estilo para el nombre de la canción */
-ul li span:first-child {
+.nombrecioncion{
   font-size: 16px;
   font-weight: bold;
   color: #333;
@@ -163,7 +161,7 @@ ul li:hover {
 }
 
 /* Estilo para el botón de reproducción */
-ul li span:last-child {
+.botonplay {
   font-size: 14px;
   color: #0077ff; /* Rojo para el botón */
   cursor: pointer;
@@ -183,7 +181,7 @@ ul li span:last-child:hover {
 
 .nested-enter-from,
 .nested-leave-to {
-  transform: translateY(-30px);
+  transform: translateX(30px);
   opacity: 0;
 }
 

@@ -1,7 +1,7 @@
 <template>
   
-  <header style="margin-top: 0;">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <header style="margin-top: 0;" class="header">
+  <nav class="navbar navbar-expand-lg navbar-light bg-black" >
     
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
@@ -159,15 +159,27 @@ export default {
 </script>
 
 <style>
+html,body{
+  background-color: #282828; /* Color de fondo global */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: #282828;
   text-align: center;
-  color: #2c3e50;
+  color: white;
   
 }
-
+.nav-link {
+  color: white !important; /* Asegúrate de que los enlaces sean blancos */
+}
+.header {
+  background-color: black;
+  color: white;
+  margin-bottom: 20px;
+}
 .app-container {
   flex: 1;
   display: flex;
@@ -175,7 +187,7 @@ export default {
 }
 
 footer {
-  background-color: #282828;
+  background-color: black;
   color: white;
   
   position: fixed;
@@ -187,7 +199,7 @@ footer {
 }
 /* Añade esto a tu archivo de estilos global o en el bloque <style> de App.vue */
 .spotify-footer {
-  background-color: #282828;
+  background-color: black;
   color: white;
  
   position: fixed;
