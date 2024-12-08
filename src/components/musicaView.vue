@@ -1,40 +1,38 @@
 <template>
   <div class="all">
-    <h1>Busqueda</h1>
     <form @submit.prevent="buscar">
-      <input type="search" v-model="busqueda" />
-      <button type="submit">buscar</button>
+      <input 
+        type="search" 
+        v-model="busqueda" 
+        placeholder="Buscar" 
+        class="input-busqueda" 
+      />
     </form>
 
-    <h2>{{ mensaje }}</h2>
-
-    <div>
+    <div class="listacanciones">
       <h2>Canciones</h2>
-      <!-- Lista de canciones -->
       <ul class="canciones">
-        <li v-for="(cancion, index) in canciones" :key="index">
-          <!-- Nombre de la canción -->
+        <li v-for="(cancion, index) in cancionesFiltradas" :key="index">
           <Transition name="fade">
             <span v-if="desplegableVisible !== index" @click="loadSong(index)" class="botonplay">
-              <i class="bi bi-play-fill fs-2"></i> <!-- fs-2 para ícono grande -->
+              <i class="bi bi-play-fill fs-2"></i>
             </span>
           </Transition>
           <span class="nombrecioncion" @click="mostrarInformacion(index)">
             {{ cancion.title }}
           </span>
-          
+
           <Transition name="nested">
             <div v-if="desplegableVisible === index" class="inner" style="margin-left: 20px;">
-               <!-- <p><strong>Título:</strong> {{ cancion.title }}</p>  -->       
               <p v-if="cancion.usuario" style="color:black"><strong>Artista:</strong> {{ cancion.usuario }}</p>
             </div>
           </Transition>
-
-          <!-- Desplegable con información -->
-          
         </li>
       </ul>
     </div>
+  </div>
+  <div>
+   <p>-</p>
   </div>
 </template>
 
@@ -51,8 +49,18 @@ export default {
       busqueda: "", // Texto de búsqueda
     };
   },
+  computed: {
+    // Filtro que devuelve las canciones que coinciden con la búsqueda en el título
+    cancionesFiltradas() {
+      if (!this.busqueda) {
+        return this.canciones; // Si no hay búsqueda, devuelve todas las canciones
+      }
+      return this.canciones.filter(cancion =>
+        cancion.title.toLowerCase().includes(this.busqueda.toLowerCase()) // Filtra por título
+      );
+    },
+  },
   methods: {
-    // Método para cargar las canciones
     async cargarCanciones() {
       try {
         const useCancionesData = useCanciones();
@@ -64,17 +72,15 @@ export default {
       }
     },
 
-    // Método para alternar el desplegable
     mostrarInformacion(index) {
       this.desplegableVisible = this.desplegableVisible === index ? null : index;
     },
     ...mapMutations(['setSelectedSong']), // Mapear la mutación al método local
     loadSong(index) {
-      
       let cancionvuex = this.canciones[index];
       this.setSelectedSong(cancionvuex.url); // Actualiza el estado global con Vuex
     },
-    // Método para manejar la búsqueda (aquí puedes agregar lógica para filtrar canciones)
+
     buscar() {
       if (this.busqueda) {
         this.mensaje = `Buscando canciones relacionadas con "${this.busqueda}"`;
@@ -84,92 +90,84 @@ export default {
     },
   },
   mounted() {
-    // Cargar las canciones al montar el componente
     this.cargarCanciones();
   },
 };
 </script>
 
 <style scoped>
-
-.nested-enter-active,
-.nested-leave-active {
-  transition: all 0.3s ease-in-out;
-}
-
-.nested-enter-from,
-.nested-leave-to {
-  transform: translateY(-30px);
-  opacity: 0;
-}
-.inner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  margin: 0 auto; /* Opcional para centrar horizontalmente si el ancho es fijo */
-  width: 300px; /* Ajusta al ancho necesario */
-  height: 100px; /* Ajusta al alto necesario */
-  border: 1px solid #ff0084;
+/* Estilo para el input de búsqueda */
+.input-busqueda {
+  width: 50%;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  border-radius: 20px; /* Bordes redondeados */
+  border: 1px solid #ccc;
+  margin-bottom: 20px; /* Separación con el contenido siguiente */
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
 }
-/* Contenedor del listado */
+
+.input-busqueda:focus {
+  border-color: #0077ff; /* Cambio de color en el foco */
+  outline: none; /* Eliminar el borde por defecto en el enfoque */
+}
+
+.input-busqueda::placeholder {
+  color: #888; /* Color gris para el placeholder */
+  font-style: italic;
+}
+
+/* Contenedor del listado de canciones */
 ul {
-  list-style-type: none; /* Quita los puntos de las listas */
+  list-style-type: none;
   padding: 0;
   margin: 0;
-  background-color: #f4f4f4; /* Fondo del contenedor */
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-  max-width: 400px; /* Ancho máximo */
-  margin: 20px auto; /* Centrar el listado */
-  
-  
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px auto;
 }
 
 /* Elementos individuales de la lista */
 ul li {
-  padding: 10px 20px; /* Espaciado interno */
-  display: flex; /* Flexbox para alinear contenido */
-  justify-content: space-between; /* Espaciado entre elementos */
-  align-items: center; /* Alinear verticalmente */
-  border-bottom: 1px solid #ddd; /* Línea separadora */
-  background-color: #fff; /* Fondo blanco para elementos */
-  transition: background-color 0.3s ease; /* Efecto al pasar el mouse */
- 
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+  transition: background-color 0.3s ease;
 }
 
-/* Último elemento sin borde */
 ul li:first-child {
   border-bottom: none;
 }
 
 /* Estilo para el nombre de la canción */
-.nombrecioncion{
+.nombrecioncion {
   font-size: 16px;
   font-weight: bold;
   color: #333;
   cursor: pointer;
-  transition: color 0.3s ease; /* Efecto al pasar el mouse */
+  transition: color 0.3s ease;
 }
 
-/* Cambiar color al pasar el mouse */
 ul li:hover {
-   color: #4b6cb7;
+  color: #4b6cb7;
 }
 
 /* Estilo para el botón de reproducción */
 .botonplay {
   font-size: 14px;
-  color: #0077ff; /* Rojo para el botón */
+  color: #0077ff;
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.3s ease;
 }
 
-/* Cambiar color al pasar el mouse */
 ul li span:last-child:hover {
   color: #ff0099;
 }
@@ -199,14 +197,16 @@ ul li span:last-child:hover {
   border-radius: 8px;
 }
 
-/* Transición para el ícono de play */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease-in-out;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+.fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
+.listacanciones {
+  margin-bottom: 100px;
+  
+}
 </style>

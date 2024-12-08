@@ -18,7 +18,8 @@
           <router-link class="nav-link"  v-if="isAuthenticated" to="/perfil">Perfil</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link"  v-if=" isArtist "  to="/formulario">Artista zone</router-link>
+          
+          <router-link class="nav-link"  v-if="isArtist" to="/formulario">Artista zone </router-link>
         </li>
         
 
@@ -118,8 +119,15 @@ export default {
       
         if (!querySnapshot.empty) {
           const usuario = querySnapshot.docs[0].data();
+          const artistafalse= usuario.artista;
+          if(artistafalse===false){
+            this.isArtist= false; // Devuelve true o false
+          }
+          else if(artistafalse===true){
+            this.isArtist= true; // Devuelve true o false
+          }
           this.nombre= usuario.email;
-          this.isArtist= usuario.artista; // Devuelve true o false
+          
         } else {
           this.isArtist= false; // No encontrado
         }
@@ -147,11 +155,12 @@ export default {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         this.isAuthenticated = true; // Usuario autenticado
-        //await this.esArtista();
+        await this.esArtista();
       } else {
         this.isAuthenticated = false; // Usuario no autenticado
       }
     });
+    console.log(this.isArtist);  // Verifica el valor de isArtist
    
      
   },
