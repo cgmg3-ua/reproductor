@@ -1,15 +1,51 @@
-Autentificacion de si es artista + el uso de vuex para hacerlo tipo spotify + el uso de storage para reproducion de musica
+
+
+
+Partes optativas que he hecho son:
+
+Búsqueda de canciones:
+En /musica hay un buscador que recarga en listado en cada letra para hacer la búsqueda al momento.
+
+return this.canciones.filter(cancion => cancion.title.toLowerCase().includes(this.busqueda.toLowerCase()))
+
+Utilizando esta línea para hacer ese filtrado pasándolo todo a minúsculas para que no tenga en cuenta las mayúsculas ni las minúsculas.
+
+La siguiente función es una función de JavaScript para buscar si una cadena contiene otra cadena como una subcadena que sirve para buscar de la forma anteriormente mencionada:
+.includes(this.busqueda.toLowerCase()).
+
+Transiciones:
+He introducido varias transiciones tanto en los detalles de las canciones (se ve al pulsar en el nombre de la canción).
+
+También he introducido que cuando el login sea incorrecto tiemblen tanto la caja de introducir el correo y la contraseña como el botón de iniciar sesión.
+
+Cuando vas a añadir una canción, hasta que no añades un archivo y un título no se muestra el botón de añadir canción.
+
+En el listado dentro de "ArtistaZone" y "Mis canciones", al editar una canción no sale el botón de editar hasta que escribes algo en el input mostrándose con una transición.
+
+Framework de componentes visuales:
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"> <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet"> He añadido estos dos componentes de Bootstrap: el primero para los estilos de mi web y el segundo para añadir iconos como el play del listado de las canciones.
+Vue Router:
+He utilizado Vue Router en index.js para la navegación de la web.
+También he añadido alguna comprobación dentro de index.js para verificar que el usuario esté autenticado y, en caso de que no lo esté, bloquear algunas rutas.
+
+Listado de otro recurso:
+Ya que para la lógica de la web un usuario habitual no podía eliminar ni editar canciones, he implementado un listado de las canciones que el artista ha subido, pudiendo solo eliminar o editar él mismo la canción.
+Esto, aunque es más complejo que hacer un único listado como se pedía en la parte obligatoria, quería recalcarlo en esta parte.
+También quiero destacar que, como voy a explicar en el siguiente apartado, en el listado en otro framework he implementado un listado de usuarios que son artistas para así poder añadir un poco a este apartado y que tuviera lógica en mi web.
+
+Implementar el listado y eliminación de ítems con otro framework cualquiera:
+En este apartado he optado por hacer un listado de los usuarios que son artistas y que al eliminarlos se edite el atributo "artista" a false.
+He optado por esto ya que eliminar un usuario me parecía algo simple y no sabía cómo optar a la máxima nota en este apartado, por lo que he optado por hacer un listado con la condición de que sea artista y que, en vez de eliminar, edite algún atributo.
+
+Detalles a considerar:
+He implementado, aparte de Pinia, Vuex, ya que antes de ver que había que implementar Pinia en esta práctica investigué cómo hacer para que, al dar play a una canción, pudiera navegar sin que se parara la música. Por lo tanto, encontré Vuex y lo utilicé de forma que, cuando tú dieras play a la canción, pasara la URL de la canción guardada en el storage de Firebase al footer y ahí implementar que suene la canción. Después descubrí Pinia que, sinceramente, me pareció mucho más sencillo que Vuex, pero como ya lo había implementado, quise dejarlo con esa herramienta.
+
+También quería destacar el uso de storage en mi práctica y la reproducción de música en la web.<
+
+
+Por ultimo he creado un repsitorio en github donde he ido subiendo periodicamnete mi web https://github.com/cgmg3-ua/reproductor.
 
 
 
 
-
-1-Crear listado de canciones en pinia ✔
-2-Crear listado mostrar informacion ✔
-3-Reproducir desde /musica ✔
-4-Perfil ver mis caciones  ✔
-5-Poder cambiar nombre/eliminar canciones ✔
-6-autentficaion para las url especificas 
-7-Ver opciones de paginacion
-8-album
-9-artistas en otro framekork
